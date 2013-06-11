@@ -1,5 +1,6 @@
 #include <vector>
 #include <opencv2/opencv.hpp>
+#include <chrono>
 
 #include "Helicopter.h"
 
@@ -24,6 +25,7 @@ int main(int argc, char** argv)
 	char key;
 	while (true)
 	{
+		auto start = std::chrono::high_resolution_clock::now();
 		cam >> cam_img;
 
 		cvtColor(cam_img, bw, CV_BGR2GRAY);
@@ -36,13 +38,13 @@ int main(int argc, char** argv)
 		imshow("Thrsh", thrsh);
 
 		heli.Update(thrsh);
-
 		heli.Draw(cam_img);
+		
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()-start).count();
+		std::cout << "Time: " << duration << " ms." << std::endl;
 
 		imshow("Image", cam_img);
 
-
-		
 		key = cv::waitKey(1);
 		if (key == 'q') break;
 	}
