@@ -49,7 +49,7 @@ bool Helicopter::SendUDP()
 	buffer[2] = (float)side.GetLastPosition().pos.x;
 	buffer[3] = (float)side.GetLastPosition().pos.y;
 	
-	return send_msg((unsigned char*)buffer, 4);
+	return send_msg((unsigned char*)buffer, 4 * sizeof(float));
 }
 
 void Helicopter::Draw(cv::Mat& image)
