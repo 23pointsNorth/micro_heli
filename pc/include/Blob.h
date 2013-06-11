@@ -11,12 +11,12 @@ class Blob
 		
 		Blob(cv::Point _pos, double _area) : pos(_pos), area(_area) {};
 
-		friend Blob operator-(const Blob &b1, const Blob &b2);
+		friend double operator-(const Blob &b1, const Blob &b2);
 };
 
-Blob operator-(const Blob &b1, const Blob &b2)
+double operator-(const Blob &b1, const Blob &b2)
 {
-	
+	 return abs(b1.pos.x - b2.pos.x) + abs(b1.pos.y - b2.pos.y) + abs(b1.area - b2.area);
 }
  
 #endif
