@@ -5,7 +5,7 @@
 
 #include "Blob.h"
 
-const int LIST_SIZE = 5;
+const unsigned int LIST_SIZE = 5;
 
 class LED
 {

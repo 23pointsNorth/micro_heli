@@ -22,8 +22,9 @@ void LED::Update(std::list<Blob> blobs)
     if (pos.size() >= LIST_SIZE)
     {
         pos.pop_front();
-        pos.push_back(*index);
     }
+
+    pos.push_back(*index);
     blobs.erase(index);
 
     Predict();
@@ -37,6 +38,12 @@ void LED::Predict()
     
     predicted.pos = current.pos + (current.pos - prev.pos);
     predicted.area = current.area + (current.area - prev.area);   
+    
+    if (pred.size() >= LIST_SIZE)
+    {
+        pred.pop_front();
+    }
+
     pred.push_back(predicted);
 }
 

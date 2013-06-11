@@ -15,3 +15,6 @@
 # Sublime project related files
 *.sublime-project
 *.sublime-workspace
+
+# Binary files
+./pc/heli_detctor
