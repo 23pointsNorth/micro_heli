@@ -10,7 +10,7 @@ SOURCES		= $(wildcard ./src/*.cpp)
 
 OBJECTS		= $(SOURCES:.cpp=.o)
 
-EXECUTABLE 	= heli_detctor
+EXECUTABLE 	= heli_detector
 
 all: $(SOURCES) $(EXECUTABLE)
 	

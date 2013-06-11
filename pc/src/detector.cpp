@@ -10,11 +10,11 @@ int main(int argc, char** argv)
 {
 
 	Mat cam_img;
-	VideoCapture cam(1);
+	VideoCapture cam(0);
 
 	Mat bw, thrsh;
 	double max_val;
-	double min_intensity = 170;
+	double min_intensity = 163;
 	double thresh_val;
 
 	vector<Point> leds;
@@ -34,7 +34,6 @@ int main(int argc, char** argv)
 		threshold(bw, thrsh, thresh_val, 255, THRESH_BINARY);
 		
 		imshow("Thrsh", thrsh);
-		imwrite("thresh.png", thrsh);
 
 		heli.Update(thrsh);
 

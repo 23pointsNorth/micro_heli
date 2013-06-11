@@ -17,4 +17,4 @@
 *.sublime-workspace
 
 # Binary files
-./pc/heli_detctor
+/pc/heli_detector
