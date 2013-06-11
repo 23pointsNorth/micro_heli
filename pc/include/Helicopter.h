@@ -7,13 +7,15 @@ class Helicopter
 {
 public: 
 	Helicopter();
-	void Update();
+	void Update(cv::Mat& image);
 	bool SendUDP();
 	void Draw(cv::Mat& image);
 
 private:
 	LED front;
 	LED side;
+
+	std::vector<Blob> detected_blobs;
 
 };
 
