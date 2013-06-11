@@ -13,6 +13,7 @@ public:
 	void Update(const Blob& new_blob);
 	Blob GetLastPosition() const;
 	Blob GetLastPrediction() const;
+	Blob GetPenultimatePrediction() const;
 private:
 	std::list<Blob> pos;
 	std::list<Blob> pred;

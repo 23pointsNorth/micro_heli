@@ -41,3 +41,9 @@ Blob LED::GetLastPrediction() const
 {
     return pred.back();
 }
+
+Blob LED::GetPenultimatePrediction() const
+{
+    if (pred.size() > 1) { return *(--pred.end()); }
+    else { return GetLastPrediction(); }
+}
