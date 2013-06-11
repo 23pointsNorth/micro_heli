@@ -10,7 +10,7 @@ SOURCES		= $(wildcard ./src/*.cpp)
 
 OBJECTS		= $(SOURCES:.cpp=.o)
 
-EXECUTABLE 	= zorbing
+EXECUTABLE 	= heli_detctor
 
 all: $(SOURCES) $(EXECUTABLE)
 	
