@@ -1,6 +1,5 @@
 #include "LED.h"
 
-#include <list>
 #include <limits>
 
 void LED::Update(std::list<Blob> blobs)

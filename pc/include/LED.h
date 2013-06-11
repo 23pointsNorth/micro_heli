@@ -2,7 +2,6 @@
 #define LED_HEADER_
 
 #include <list>
-#include <vector>
 
 #include "Blob.h"
 
