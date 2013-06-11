@@ -1,37 +1,10 @@
 #include <vector>
 #include <opencv2/opencv.hpp>
 
+#include "Helicopter.h"
+
 using namespace std;
 using namespace cv;
-
-const int MIN_AREA = 1;
-const int MAX_AREA = 50;
-
-void findLEDs(Mat img, vector<Point>& leds)
-{
-	static vector<vector<Point>> contours;
-	static double area, circularity;
-	static Rect led_rect;
-
-	leds.clear();
-
-	findContours(img, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
-
-	for (unsigned int i = 0; i < contours.size(); i++)
-	{
-		area = contourArea(contours[i]);
-		if (area < MIN_AREA) { continue; }
-		circularity = 4 * M_PI * area / (contours[i].size() * contours[i].size());
-		led_rect = boundingRect(contours[i]);
-
-		if(circularity >= 0.35f)
-		{
-			leds.push_back(0.5 * (led_rect.tl() + led_rect.br()));
-		}
-	}
-
-	
-}
 
 int main(int argc, char** argv)
 {
@@ -46,6 +19,8 @@ int main(int argc, char** argv)
 
 	vector<Point> leds;
 
+	Helicopter heli("192.168.1.3", 32000);
+
 	char key;
 	while (true)
 	{
@@ -59,15 +34,15 @@ int main(int argc, char** argv)
 		threshold(bw, thrsh, thresh_val, 255, THRESH_BINARY);
 		
 		imshow("Thrsh", thrsh);
+		imwrite("thresh.png", thrsh);
 
-		findLEDs(thrsh, leds);
+		heli.Update(thrsh);
 
-		for(unsigned int i = 0; i < leds.size(); ++i)
-		{
-			circle(cam_img, leds[i], 5, Scalar(0, 255, 0), CV_FILLED);
-		}
-		
+		heli.Draw(cam_img);
+
 		imshow("Image", cam_img);
+
+
 		
 		key = cv::waitKey(1);
 		if (key == 'q') break;

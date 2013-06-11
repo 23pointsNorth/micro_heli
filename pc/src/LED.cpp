@@ -12,15 +12,21 @@ void LED::Update(const Blob& new_blob)
 
     pos.push_back(new_blob);
 
+    // std::cout << "[LED.cpp] pos: " << new_blob.pos << std::endl;
     Predict();
 }
 
 void LED::Predict()
 {
     Blob predicted;
-    Blob current = pos.back();
-    Blob prev = *(--pos.end());
+    Blob current = pos.back(); 
+    auto last_it = pos.rbegin();
+    ++last_it;
+    Blob prev = *(last_it);
     
+    // std::cout << "[LED.cpp] current: " << current.pos << std::endl;
+    // std::cout << "[LED.cpp] prev: " << prev.pos << std::endl;
+
     predicted.pos = current.pos + (current.pos - prev.pos);
     predicted.area = current.area + (current.area - prev.area);   
     
@@ -44,6 +50,11 @@ Blob LED::GetLastPrediction() const
 
 Blob LED::GetPenultimatePrediction() const
 {
-    if (pred.size() > 1) { return *(--pred.end()); }
+    if (pred.size() > 1) 
+    { 
+        auto last_it = pred.rbegin();
+        ++last_it;
+        return *last_it;
+    }
     else { return GetLastPrediction(); }
 }

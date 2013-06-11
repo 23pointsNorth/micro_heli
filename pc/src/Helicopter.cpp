@@ -24,7 +24,7 @@ void Helicopter::Update(cv::Mat& image)
 
 	detected_blobs.clear();
 
-	findContours(image, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
+	findContours(image, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
 
 	for (unsigned int i = 0; i < contours.size(); i++)
 	{
@@ -40,6 +40,7 @@ void Helicopter::Update(cv::Mat& image)
 		}
 	}
 
+	// std::cout << "[Helicopter.cpp] blobs " << detected_blobs.size() << std::endl;
 	if(detected_blobs.size() == 0) return;
 
 	//Front1,2 and Side1,2
@@ -51,6 +52,7 @@ void Helicopter::Update(cv::Mat& image)
 
 	if(front1 != side1)
 	{
+		// std::cout << "[Helicopter.cpp] front != side " << std::endl;
 		assignLEDs(front1, side1, front_dist1, side_dist1);
 	} 
 	else
@@ -59,12 +61,14 @@ void Helicopter::Update(cv::Mat& image)
 		{
 			if(front_dist1 < side_dist1)
 			{
+				// std::cout << "[Helicopter.cpp] 1 " << std::endl;
 				//Do not swap lines!
 				side.Update(findMissingBlob(front, front1, side));
 				front.Update(*front1);
 			}
 			else
 			{
+				// std::cout << "[Helicopter.cpp] 2 " << std::endl;
 				//Do not swap lines!
 				front.Update(findMissingBlob(side, side1, front));
 				side.Update(*side1);
@@ -74,10 +78,12 @@ void Helicopter::Update(cv::Mat& image)
 		{
 			if(front_dist1 < side_dist1)
 			{
+				// std::cout << "[Helicopter.cpp] 3 " << std::endl;
 				assignLEDs(front1, side2, front_dist1, side_dist2);
 			}
 			else
 			{
+				// std::cout << "[Helicopter.cpp] 4 " << std::endl;
 				assignLEDs(front2, side1, front_dist2, side_dist1);	
 			}	
 		}
@@ -97,20 +103,24 @@ bool Helicopter::SendUDP()
 
 void Helicopter::Draw(cv::Mat& image)
 {
-	circle(image, front.GetLastPosition().pos, 5, Scalar(0, 255, 0));
-	circle(image, side.GetLastPosition().pos, 5, Scalar(0, 255, 0));
+	circle(image, front.GetLastPosition().pos, 5, Scalar(0, 255, 0), 2);
+	circle(image, side.GetLastPosition().pos, 5, Scalar(0, 255, 0), 2);
 
-	circle(image, front.GetLastPosition().pos, 5, Scalar(0, 255, 255));
-	circle(image, side.GetLastPosition().pos, 5, Scalar(0, 255, 255));
-
-
+	circle(image, front.GetPenultimatePrediction().pos, 10, Scalar(0, 255, 255), 2);
+	circle(image, side.GetPenultimatePrediction().pos, 10, Scalar(0, 255, 255), 2);
+	
+	// std::cout << "----" << std::endl;
+	// std::cout << "Last: " << front.GetLastPosition().pos << std::endl;
+	// std::cout << "Last predicted: " << front.GetLastPrediction().pos << std::endl;
+	// std::cout << "penultimate pred: " << front.GetPenultimatePrediction().pos << std::endl;
 }
 
 void Helicopter::getTwoBestMatches(const LED& led, Blob*& first, double& first_dist, Blob*& second, double& second_dist)
 {
 	// Search for the closest blob to the predicted position
 	first_dist = std::numeric_limits<double>::max();
-	std::list<Blob>::iterator index;
+	second_dist = std::numeric_limits<double>::max();
+	int min_index = 0;
 
 	first = NULL;
 	second = NULL;
@@ -125,13 +135,28 @@ void Helicopter::getTwoBestMatches(const LED& led, Blob*& first, double& first_d
 
 		    first = detected_blobs[i];
 		    first_dist = diff;
+
+		    min_index = i;
+		}
+	}
+	
+	if(second == NULL)
+	{
+		for(unsigned int i = min_index + 1; i < detected_blobs.size(); ++i)
+		{
+			double diff = led.GetLastPrediction() - *detected_blobs[i];
+			if (diff < second_dist)
+			{
+				second = detected_blobs[i];
+				second_dist = diff;
+			}
 		}
 	}
 }
 
 Blob Helicopter::findMissingBlob(const LED& led1, const Blob* b1, const LED& led2)
 {
-	Point d = led1.GetLastPosition().pos - led2.GetLastPosition().pos;
+	Point d = led2.GetLastPosition().pos - led1.GetLastPosition().pos;
 
 	return Blob(b1->pos + d, 0);
 

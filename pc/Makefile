@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS 	= -c -Wall -O3  -I ./include/ 
+CFLAGS 	= -c -Wall -O3 -g  -I ./include/ 
 
 #Include Libs
 #include OpenCV
