@@ -10,13 +10,12 @@ const int MAX_AREA = 50;
 void findLEDs(Mat img, vector<Point>& leds)
 {
 	static vector<vector<Point>> contours;
-	static double area, max_area, circularity;
+	static double area, circularity;
 	static Rect led_rect;
 
 	leds.clear();
 
 	findContours(img, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
-	max_area = -1;
 
 	for (unsigned int i = 0; i < contours.size(); i++)
 	{
@@ -30,6 +29,8 @@ void findLEDs(Mat img, vector<Point>& leds)
 			leds.push_back(0.5 * (led_rect.tl() + led_rect.br()));
 		}
 	}
+
+	
 }
 
 int main(int argc, char** argv)

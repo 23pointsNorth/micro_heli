@@ -10,9 +10,9 @@ const unsigned int LIST_SIZE = 5;
 class LED
 {
 public: 
-	void Update(std::list<Blob> blobs);
-	Blob GetLastPosition();
-	Blob GetLastPrediction();
+	void Update(const Blob& new_blob);
+	Blob GetLastPosition() const;
+	Blob GetLastPrediction() const;
 private:
 	std::list<Blob> pos;
 	std::list<Blob> pred;

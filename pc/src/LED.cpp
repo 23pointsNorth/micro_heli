@@ -2,30 +2,15 @@
 
 #include <limits>
 
-void LED::Update(std::list<Blob> blobs)
+void LED::Update(const Blob& new_blob)
 {
-    // Search for the closest blob to the predicted position
-    double min_dist = std::numeric_limits<double>::max();
-    std::list<Blob>::iterator index;
-
-    for(std::list<Blob>::iterator it = blobs.begin(); it != blobs.end(); ++it)
-    {
-        double diff = pred.back() - *it;
-        if (diff < min_dist)
-        {
-            index = it;
-            min_dist = diff;
-        }
-    }
-    
     // Add to list
     if (pos.size() >= LIST_SIZE)
     {
         pos.pop_front();
     }
 
-    pos.push_back(*index);
-    blobs.erase(index);
+    pos.push_back(new_blob);
 
     Predict();
 }
@@ -47,12 +32,12 @@ void LED::Predict()
     pred.push_back(predicted);
 }
 
-Blob LED::GetLastPosition()
+Blob LED::GetLastPosition() const
 {
     return pos.back();
 }
 
-Blob LED::GetLastPrediction()
+Blob LED::GetLastPrediction() const
 {
     return pred.back();
 }
