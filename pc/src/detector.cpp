@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 {
 
 	Mat cam_img;
-	VideoCapture cam(0);
+	VideoCapture cam(1);
 
 	Mat bw, thrsh;
 	double max_val;
@@ -38,7 +38,9 @@ int main(int argc, char** argv)
 		imshow("Thrsh", thrsh);
 
 		heli.Update(thrsh);
+		heli.SendUDP();
 		heli.Draw(cam_img);
+
 		
 		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()-start).count();
 		std::cout << "Time: " << duration << " ms." << std::endl;
@@ -48,6 +50,8 @@ int main(int argc, char** argv)
 		key = cv::waitKey(1);
 		if (key == 'q') break;
 	}
+
+	heli.EmergencyStop();
 
 	return 0;
 }

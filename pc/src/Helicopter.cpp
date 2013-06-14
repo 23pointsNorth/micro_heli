@@ -91,13 +91,21 @@ void Helicopter::Update(cv::Mat& image)
 }
 
 bool Helicopter::SendUDP()
-{
+{	
+	if(detected_blobs.size() == 0) return false;
+
 	float buffer[4];
 	buffer[0] = (float)front.GetLastPosition().pos.x;
 	buffer[1] = (float)front.GetLastPosition().pos.y;
 	buffer[2] = (float)side.GetLastPosition().pos.x;
 	buffer[3] = (float)side.GetLastPosition().pos.y;
 	
+	return send_msg((unsigned char*)buffer, 4 * sizeof(float));
+}
+
+bool Helicopter::EmergencyStop()
+{
+	float buffer[4] = {-1, -1, -1, -1};
 	return send_msg((unsigned char*)buffer, 4 * sizeof(float));
 }
 

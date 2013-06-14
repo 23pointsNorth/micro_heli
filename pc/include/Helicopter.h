@@ -14,6 +14,7 @@ public:
 	~Helicopter();
 	void Update(cv::Mat& image);
 	bool SendUDP();
+	bool EmergencyStop();
 	void Draw(cv::Mat& image);
 
 private:
